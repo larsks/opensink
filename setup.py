@@ -1,0 +1,13 @@
+from setuptools import setup, find_packages
+
+with open('requirements.txt') as fd:
+    requires = fd.readlines()
+
+    setup(name='opensink',
+          author='Lars Kellogg-Stedman',
+          author_email='lars@oddbit.com',
+          url='https://github.com/larsks/opensink',
+          version='0.1',
+          packages=find_packages(),
+          install_requires=requires,
+          )
