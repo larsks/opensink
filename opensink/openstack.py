@@ -87,11 +87,16 @@ class OpenStack(object):
             project_domain_id=self.project_domain_id)
 
     def get_keystone_client(self):
+        try:
+            project_id = self.sess.get_project_id()
+        except AttributeError:
+            project_id = self.sess.auth.tenant_id
+
         kc = keystone_client.Client(
             self.identity_api_version,
             session=self.sess,
-            project_id=self.sess.get_project_id(),
-            tenant_id=self.sess.get_project_id(),
+            project_id=project_id,
+            tenant_id=project_id,
             auth_url=self.sess.get_endpoint(
                 interface=keystone_auth.AUTH_INTERFACE))
 
