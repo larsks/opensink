@@ -15,7 +15,14 @@ variable available, then using `opensink` is as simple as:
     >>> import opensink.openstack
     >>> clients = opensink.openstack.OpenStack()
 
-Need a list of servers?
+Need a list of users?
+
+    >>> c.keystone.users.find(name='lars')
+    <User {u'username': u'lars', u'name': u'lars', u'enabled': True,
+    u'tenantId': u'f4e7e158cb154de5ab503bd7096b8981', u'id':
+    u'065e9427a1f14f9398082e5bed3d3fb7', u'email': u'lars@oddbit.com'}>
+
+Or a list of servers?
 
     >>> clients.nova.servers.list()
     [<Server: larstest-server-23dwogjbq3ux>, <Server: cirros>]
