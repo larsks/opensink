@@ -7,13 +7,42 @@ import keystoneclient.auth as keystone_auth
 import keystoneclient.auth.identity as keystone_identity
 import keystoneclient.session as keystone_session
 import keystoneclient.client as keystone_client
-import novaclient.client as nova_client
-import glanceclient.client as glance_client
-import cinderclient.client as cinder_client
-import neutronclient.neutron.client as neutron_client
-import heatclient.client as heat_client
+
+try:
+    import novaclient.client as nova_client
+    HAS_NOVA = True
+except ImportError:
+    HAS_NOVA = False
+
+try:
+    import glanceclient.client as glance_client
+    HAS_GLANCE = True
+except ImportError:
+    HAS_GLANCE = False
+
+try:
+    import cinderclient.client as cinder_client
+    HAS_CINDER = True
+except ImportError:
+    HAS_CINDER = False
+
+try:
+    import neutronclient.neutron.client as neutron_client
+    HAS_NEUTRON = True
+except ImportError:
+    HAS_NEUTRON = False
+
+try:
+    import heatclient.client as heat_client
+    HAS_HEAT = True
+except ImportError:
+    HAS_HEAT = False
 
 LOG = logging.getLogger(__name__)
+
+
+class ClientNotAvailable(Exception):
+    pass
 
 
 class OpenStack(object):
@@ -105,9 +134,15 @@ class OpenStack(object):
         return kc
 
     def get_nova_client(self):
+        if not HAS_NOVA:
+            raise ClientNotAvailable('nova')
+
         return nova_client.Client('2', session=self.sess)
 
     def get_glance_client(self):
+        if not HAS_GLANCE:
+            raise ClientNotAvailable('glance')
+
         return glance_client.Client(
             '2', endpoint=self.keystone.service_catalog.url_for(
                 service_type='image',
@@ -115,12 +150,21 @@ class OpenStack(object):
             token=self.sess.get_token())
 
     def get_cinder_client(self):
+        if not HAS_CINDER:
+            raise ClientNotAvailable('cinder')
+
         return cinder_client.Client('2', session=self.sess)
 
     def get_neutron_client(self):
+        if not HAS_NEUTRON:
+            raise ClientNotAvailable('neutron')
+
         return neutron_client.Client('2.0', session=self.sess)
 
     def get_heat_client(self):
+        if not HAS_HEAT:
+            raise ClientNotAvailable('heat')
+
         # XXX (Lars Kellogg-Stedman): Why is it necessary to specify
         # service_type here? Heat should already know it is the
         # orchestration service.
