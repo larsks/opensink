@@ -12,8 +12,8 @@ This is for you.
 Assuming that you have the standard suite of `OS_*` environment
 variable available, then using `opensink` is as simple as:
 
-    >>> import opensink.openstack
-    >>> clients = opensink.openstack.OpenStack()
+    >>> import opensink
+    >>> clients = opensink.OpenStack()
 
 Need a list of users?
 
